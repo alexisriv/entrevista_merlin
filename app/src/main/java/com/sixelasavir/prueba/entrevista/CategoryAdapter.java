@@ -180,8 +180,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 imageView.setImageBitmap(bitmap);
             } else
                 imageView.setImageResource(R.mipmap.default_banner_mobile);
-
-
         }
     }
 
