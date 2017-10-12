@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/cardview_padding"
+    android:layout_margin="@dimen/margin_all_2"
+    android:layout_marginBottom="0dp"
+    app:cardElevation="@dimen/cardview_elevation"
+    app:cardBackgroundColor="@color/cardview_light_background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:src="@mipmap/default_banner_mobile"
+                android:scaleType="fitXY"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="@dimen/cardview_imageview_width"
+                    android:layout_height="@dimen/cardview_imageview_height"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_all"
+                    android:text="@string/textview_title_item_category"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorNegative"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/cardview_linearlayout_height">
+                <TextView
+                    android:layout_margin="@dimen/margin_all"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/content"/>
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/go_btn"
+                    android:text="@string/button_read_content"
+                    android:id="@+id/read_btn" />
+
+                <Button
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/button_go_list_app"
+                    android:id="@+id/go_btn" />
+            </RelativeLayout>
+        </LinearLayout>
+</android.support.v7.widget.CardView>
+

@@ -12,12 +12,4 @@
     tools:context="com.sixelasavir.prueba.entrevista.SplashActivity"
     app:theme="@style/SplashTheme">
 
-
-    <!--ImageView
-        android:layout_width="@dimen/icon_splash_width"
-        android:layout_height="@dimen/icon_splash_height"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/imageView" /-->
 </RelativeLayout>

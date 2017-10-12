@@ -18,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CategoryActivity"></activity>
+        <activity android:label="@string/label_title_name_category" android:name=".CategoryActivity"></activity>
     </application>
 
 </manifest>

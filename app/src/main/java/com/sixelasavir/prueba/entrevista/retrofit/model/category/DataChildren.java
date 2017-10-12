@@ -1,5 +1,7 @@
 package com.sixelasavir.prueba.entrevista.retrofit.model.category;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -11,6 +13,8 @@ public class DataChildren {
     @SerializedName("banner_img")
     private String bannerImg;
 
+    private Bitmap bannerBitmap;
+
     @SerializedName("display_name_prefixed")
     private String displayNamePrefixed;
 
@@ -20,6 +24,8 @@ public class DataChildren {
     @SerializedName("header_img")
     private String headerImg;
 
+    private Bitmap headerBitmap;
+
     private String title;
 
     @SerializedName("audience_target")
@@ -27,6 +33,8 @@ public class DataChildren {
 
     @SerializedName("icon_img")
     private String iconImg;
+
+    private Bitmap iconBitmap;
 
     @SerializedName("header_title")
     private String headerTitle;
@@ -143,5 +151,29 @@ public class DataChildren {
 
     public void setPublicDescription(String publicDescription) {
         this.publicDescription = publicDescription;
+    }
+
+    public Bitmap getBannerBitmap() {
+        return bannerBitmap;
+    }
+
+    public void setBannerBitmap(Bitmap bannerBitmap) {
+        this.bannerBitmap = bannerBitmap;
+    }
+
+    public Bitmap getHeaderBitmap() {
+        return headerBitmap;
+    }
+
+    public void setHeaderBitmap(Bitmap headerBitmap) {
+        this.headerBitmap = headerBitmap;
+    }
+
+    public Bitmap getIconBitmap() {
+        return iconBitmap;
+    }
+
+    public void setIconBitmap(Bitmap iconBitmap) {
+        this.iconBitmap = iconBitmap;
     }
 }

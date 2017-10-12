@@ -68,11 +68,11 @@ public class SplashActivity extends AppCompatActivity {
 
                 try{
                     if(jsonString!=null && !jsonString.isEmpty())
-                        intent.putExtra(AppString.JSON_CATEGORY_STRING, jsonString);
+                        intent.putExtra(BundleString.JSON_CATEGORY_STRING, jsonString);
                         // Todo: Toca buscar en cache si esta el json
                     else
                         Log.d(TAG, NOTIFICATION_SERVICE);
-                    sleep(3000);
+                    sleep(2000);
                 }catch (Exception e) {
                     Log.e(TAG, e.getMessage());
                 } finally {
@@ -81,7 +81,5 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }
         }.start();
-
-
     }
 }
