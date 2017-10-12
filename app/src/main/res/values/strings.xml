@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Entrevista</string>
+
+    <string name="msg_warning_off_line">Warning could not connect to server, we will work without offline.</string>
 </resources>

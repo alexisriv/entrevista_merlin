@@ -11,6 +11,6 @@ import retrofit2.http.GET;
 
 public interface ICategory {
 
-    @GET("/reddits.json")
+    @GET("reddits.json")
     Call<Response> listCategories();
 }
