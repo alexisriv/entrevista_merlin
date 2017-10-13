@@ -147,7 +147,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
     }
 
     public interface DetailListener {
-        void executeListener(String path);
+        void executeListener(String url);
     }
 
 }

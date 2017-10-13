@@ -1,9 +1,12 @@
 package com.sixelasavir.prueba.entrevista;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -20,10 +23,16 @@ public class AppActivity extends AppCompatActivity implements AppAdapter.DetailL
     private RecyclerView.LayoutManager layoutManager;
     private static final String TAG = "AppActivity";
 
+    ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getResources().getString(R.string.msg_info_wait));
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         Bundle bundle = getIntent().getExtras();
         List<Children> apps = new ArrayList<>();
@@ -44,6 +53,31 @@ public class AppActivity extends AppCompatActivity implements AppAdapter.DetailL
 
     @Override
     public void executeListener(String path) {
-        Toast.makeText(this, getResources().getString(R.string.msg_info_in_construction).concat(" ").concat(path),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, getResources().getString(R.string.msg_info_in_construction).concat(" ").concat(path), Toast.LENGTH_SHORT).show();
+        nextDetailActivity(path);
+    }
+
+    private void nextDetailActivity() {
+        this.nextDetailActivity(null);
+    }
+
+    private void nextDetailActivity(String url) {
+
+        Intent intent = new Intent(this, DetailActivity.class);
+
+        try {
+            if (url != null && !url.isEmpty())
+                intent.putExtra(BundleString.URL_DETAIL_STRING, url);
+            else
+                Log.d(TAG, NOTIFICATION_SERVICE);
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        } finally {
+            if (progressDialog.isShowing())
+                progressDialog.dismiss();
+
+            startActivity(intent);
+        }
     }
 }

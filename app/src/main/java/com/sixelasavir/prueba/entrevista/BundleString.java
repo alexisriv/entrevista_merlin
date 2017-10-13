@@ -8,4 +8,5 @@ public class BundleString {
 
     public static final String JSON_CATEGORY_STRING = "json.category.string";
     public static final String JSON_APP_STRING = "json.app.string";
+    public static final String URL_DETAIL_STRING = "url.detail.string";
 }

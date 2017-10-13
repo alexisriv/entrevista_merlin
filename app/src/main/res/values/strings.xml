@@ -2,6 +2,7 @@
     <string name="app_name">Entrevista</string>
     <string name="label_title_name_category">Categories</string>
     <string name="label_title_name_app">Apps</string>
+    <string name="label_title_name_detail">Details</string>
 
     <string name="msg_warning_off_line">Warning could not connect to server, we will work without offline.</string>
     <string name="msg_warning_no_data">No data to display.</string>

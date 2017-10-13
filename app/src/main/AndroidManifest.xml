@@ -25,6 +25,9 @@
         <activity
             android:name=".AppActivity"
             android:label="@string/label_title_name_app" />
+        <activity android:name=".DetailActivity"
+            android:label="@string/label_title_name_detail"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
