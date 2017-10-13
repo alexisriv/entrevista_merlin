@@ -46,14 +46,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Children category = this.categories.get(position);
+        final Children category = this.categories.get(position);
 
-        if(category.getDataChildren().getBannerBitmap() == null)
+        if (category.getDataChildren().getBannerBitmap() == null)
             new ImageTask(category.getDataChildren().getBannerImg(), holder.getBannerImageView(), position, TYPE_BANNER).execute();
         else
             holder.getBannerImageView().setImageBitmap(category.getDataChildren().getBannerBitmap());
 
-        if(category.getDataChildren().getIconBitmap() == null)
+        if (category.getDataChildren().getIconBitmap() == null)
             new ImageTask(category.getDataChildren().getIconImg(), holder.getIconImageView(), position, TYPE_ICON).execute();
         else
             holder.getIconImageView().setImageBitmap(category.getDataChildren().getIconBitmap());
@@ -63,13 +63,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         holder.getReadButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((GoListener) context).executeListener();
+                Toast.makeText(context, R.string.msg_info_in_construction, Toast.LENGTH_SHORT).show();
             }
         });
         holder.getGoButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, R.string.msg_info_in_construction, Toast.LENGTH_SHORT).show();
+                ((GoListener) context).executeListener(category.getDataChildren().getDisplayNamePrefixed());
             }
         });
     }
@@ -140,6 +140,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            imageView.setImageResource(R.mipmap.default_banner_mobile);
+        }
+
+        @Override
         protected Bitmap doInBackground(Void... params) {
             try {
                 Bitmap bitmap;
@@ -157,18 +163,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             return null;
         }
 
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            Log.d("onProgressUpdate", String.valueOf(values));
-            super.onProgressUpdate(values);
-        }
-
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             if (bitmap != null) {
-                switch (type){
+                switch (type) {
                     case TYPE_BANNER:
                         categories.get(position).getDataChildren().setBannerBitmap(bitmap);
                         break;
@@ -184,6 +183,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     }
 
     public interface GoListener {
-        void executeListener();
+        void executeListener(String path);
     }
 }

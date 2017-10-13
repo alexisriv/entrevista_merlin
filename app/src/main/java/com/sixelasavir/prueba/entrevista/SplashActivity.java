@@ -1,16 +1,25 @@
 package com.sixelasavir.prueba.entrevista;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.sixelasavir.prueba.entrevista.retrofit.interfaces.ICategory;
+import com.sixelasavir.prueba.entrevista.retrofit.model.category.Children;
 import com.sixelasavir.prueba.entrevista.retrofit.model.category.Response;
 import com.sixelasavir.prueba.entrevista.retrofit.util.BaseService;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +40,12 @@ public class SplashActivity extends AppCompatActivity {
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 try {
                     if(response.isSuccessful()){
+                        /*for(Children ctg: response.body().getDataListing().getChildren()) {
+                            ctg.getDataChildren().setBannerBitmap(new ImageTask(ctg.getDataChildren().getBannerImg()).execute().get());
+                            ctg.getDataChildren().setIconBitmap(new ImageTask(ctg.getDataChildren().getIconImg()).execute().get());
+                            ctg.getDataChildren().setHeaderBitmap(new ImageTask(ctg.getDataChildren().getHeaderImg()).execute().get());
+                            Log.d(TAG.concat("For"), ctg.getDataChildren().getTitle());
+                        }*/
                         String bodyString = new Gson().toJson(response.body());
 
                         nextCategoryActivity(bodyString);
@@ -81,5 +96,32 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }
         }.start();
+    }
+
+    public class ImageTask extends AsyncTask<Void, Void, Bitmap> {
+
+        private String url;
+
+        public ImageTask(String url) {
+            this.url = url;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            try {
+                Bitmap bitmap;
+                URL urlConnection = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlConnection.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream inputStream = connection.getInputStream();
+                bitmap = BitmapFactory.decodeStream(inputStream);
+                return bitmap;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
 }

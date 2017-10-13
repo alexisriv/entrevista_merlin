@@ -1,32 +1,45 @@
 package com.sixelasavir.prueba.entrevista;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.sixelasavir.prueba.entrevista.retrofit.interfaces.IApp;
 import com.sixelasavir.prueba.entrevista.retrofit.model.category.Children;
 import com.sixelasavir.prueba.entrevista.retrofit.model.category.Response;
+import com.sixelasavir.prueba.entrevista.retrofit.util.BaseService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class  CategoryActivity extends AppCompatActivity implements CategoryAdapter.GoListener {
+import retrofit2.Call;
+import retrofit2.Callback;
+
+public class CategoryActivity extends AppCompatActivity implements CategoryAdapter.GoListener {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private static final String TAG = "CategoryActivity";
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
-
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getResources().getString(R.string.msg_info_wait));
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         Bundle bundle = getIntent().getExtras();
         List<Children> categories = new ArrayList<>();
-        if(bundle != null) {
+        if (bundle != null) {
             Response response = new Gson().fromJson(bundle.getString(BundleString.JSON_CATEGORY_STRING), Response.class);
             categories = response.getDataListing().getChildren();
         } else {
@@ -42,7 +55,58 @@ public class  CategoryActivity extends AppCompatActivity implements CategoryAdap
     }
 
     @Override
-    public void executeListener() {
+    public void executeListener(String path) {
+        progressDialog.show();
+        BaseService.getInstance().getService(IApp.class).listApps(path).enqueue(new Callback<com.sixelasavir.prueba.entrevista.retrofit.model.app.Response>() {
+            @Override
+            public void onResponse(Call<com.sixelasavir.prueba.entrevista.retrofit.model.app.Response> call, retrofit2.Response<com.sixelasavir.prueba.entrevista.retrofit.model.app.Response> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        String bodyString = new Gson().toJson(response.body());
+                        nextAppActivity(bodyString);
+                        Log.d("response", bodyString);
+                    } else {
+                        throw new Exception(Integer.toString(response.code()));
+                    }
+                } catch (Exception e) {
+                    if (progressDialog.isShowing())
+                        progressDialog.dismiss();
 
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.sixelasavir.prueba.entrevista.retrofit.model.app.Response> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), R.string.msg_warning_off_line, Toast.LENGTH_LONG).show();
+                Log.e(TAG, t.getMessage());
+                nextAppActivity();
+            }
+        });
+    }
+
+    private void nextAppActivity() {
+        this.nextAppActivity(null);
+    }
+
+    private void nextAppActivity(String jsonString) {
+
+        Intent intent = new Intent(this, AppActivity.class);
+
+        try {
+            if (jsonString != null && !jsonString.isEmpty())
+                intent.putExtra(BundleString.JSON_APP_STRING, jsonString);
+                // Todo: Toca buscar en cache si esta el json
+            else
+                Log.d(TAG, NOTIFICATION_SERVICE);
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        } finally {
+            if (progressDialog.isShowing())
+                progressDialog.dismiss();
+
+            startActivity(intent);
+        }
     }
 }

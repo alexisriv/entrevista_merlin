@@ -1,4 +1,4 @@
-package com.sixelasavir.prueba.entrevista.retrofit.model.category;
+package com.sixelasavir.prueba.entrevista.retrofit.model.app;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -45,7 +45,7 @@ public class DataListing {
         this.whitelistStatus = whitelist_status;
     }
 
-    public List<Children> getChildren() {
+    public List getChildren() {
         return children;
     }
 

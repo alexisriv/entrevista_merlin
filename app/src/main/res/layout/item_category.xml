@@ -33,7 +33,8 @@
                     android:id="@+id/icon"
                     android:layout_width="@dimen/cardview_imageview_width"
                     android:layout_height="@dimen/cardview_imageview_height"
-                    android:src="@mipmap/ic_launcher" />
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/default_banner_mobile" />
 
                 <TextView
                     android:id="@+id/title"

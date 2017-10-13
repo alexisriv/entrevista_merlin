@@ -1,14 +1,16 @@
 <resources>
     <string name="app_name">Entrevista</string>
     <string name="label_title_name_category">Categories</string>
-
+    <string name="label_title_name_app">Apps</string>
 
     <string name="msg_warning_off_line">Warning could not connect to server, we will work without offline.</string>
     <string name="msg_warning_no_data">No data to display.</string>
     <string name="msg_info_in_construction">In construction.</string>
+    <string name="msg_info_wait">Wait, please.</string>
 
     <string name="textview_title_item_category">Title</string>
     <string name="button_go_list_app">Go</string>
     <string name="button_read_content">Read</string>
+    <string name="button_detail_app">Detail</string>
 
 </resources>
