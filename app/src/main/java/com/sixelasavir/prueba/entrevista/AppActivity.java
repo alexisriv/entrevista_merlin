@@ -1,11 +1,14 @@
 package com.sixelasavir.prueba.entrevista;
 
-import android.app.ProgressDialog;
+import android.app.ActivityOptions;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Explode;
+import android.transition.Fade;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,16 +26,11 @@ public class AppActivity extends AppCompatActivity implements AppAdapter.DetailL
     private RecyclerView.LayoutManager layoutManager;
     private static final String TAG = "AppActivity";
 
-    ProgressDialog progressDialog;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app);
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getResources().getString(R.string.msg_info_wait));
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Bundle bundle = getIntent().getExtras();
         List<Children> apps = new ArrayList<>();
@@ -49,11 +47,12 @@ public class AppActivity extends AppCompatActivity implements AppAdapter.DetailL
         recyclerView.setLayoutManager(layoutManager);
         adapter = new AppAdapter(this, apps);
         recyclerView.setAdapter(adapter);
+
+        setupTransition();
     }
 
     @Override
     public void executeListener(String path) {
-        //Toast.makeText(this, getResources().getString(R.string.msg_info_in_construction).concat(" ").concat(path), Toast.LENGTH_SHORT).show();
         nextDetailActivity(path);
     }
 
@@ -63,6 +62,10 @@ public class AppActivity extends AppCompatActivity implements AppAdapter.DetailL
 
     private void nextDetailActivity(String url) {
 
+        ActivityOptions options = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            options = ActivityOptions.makeSceneTransitionAnimation(this);
+        }
         Intent intent = new Intent(this, DetailActivity.class);
 
         try {
@@ -74,10 +77,33 @@ public class AppActivity extends AppCompatActivity implements AppAdapter.DetailL
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         } finally {
-            if (progressDialog.isShowing())
-                progressDialog.dismiss();
 
-            startActivity(intent);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+                startActivity(intent, options.toBundle());
+            else
+                startActivity(intent);
         }
+    }
+
+    private void setupTransition() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Fade fadeEnter = new Fade();
+            fadeEnter.setDuration(700);
+            getWindow().setEnterTransition(fadeEnter);
+
+            Explode explodeExit = new Explode();
+            explodeExit.setDuration(700);
+            getWindow().setExitTransition(explodeExit);
+        }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            finishAfterTransition();
+        } else
+            finish();
+
+        return true;
     }
 }

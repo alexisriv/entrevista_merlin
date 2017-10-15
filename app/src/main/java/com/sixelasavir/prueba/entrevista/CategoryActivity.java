@@ -1,12 +1,15 @@
 package com.sixelasavir.prueba.entrevista;
 
+import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Slide;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -28,13 +31,14 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
     private RecyclerView.LayoutManager layoutManager;
     private static final String TAG = "CategoryActivity";
 
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
         progressDialog = new ProgressDialog(this);
+        progressDialog.setIcon(R.mipmap.ic_reddit);
         progressDialog.setMessage(getResources().getString(R.string.msg_info_wait));
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         Bundle bundle = getIntent().getExtras();
@@ -52,6 +56,8 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
         recyclerView.setLayoutManager(layoutManager);
         adapter = new CategoryAdapter(this, categories);
         recyclerView.setAdapter(adapter);
+
+        setupTransition();
     }
 
     @Override
@@ -91,6 +97,10 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
 
     private void nextAppActivity(String jsonString) {
 
+        ActivityOptions options = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+             options = ActivityOptions.makeSceneTransitionAnimation(this);
+        }
         Intent intent = new Intent(this, AppActivity.class);
 
         try {
@@ -106,7 +116,26 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
             if (progressDialog.isShowing())
                 progressDialog.dismiss();
 
-            startActivity(intent);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+                startActivity(intent, options.toBundle());
+            else
+                startActivity(intent);
         }
     }
+
+
+    private void setupTransition() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Slide slideEnter = new Slide();
+            slideEnter.setSlideEdge(Gravity.RIGHT);
+            slideEnter.setDuration(700);
+            getWindow().setEnterTransition(slideEnter);
+
+            Slide slideExit = new Slide();
+            slideExit.setSlideEdge(Gravity.LEFT);
+            slideExit.setDuration(700);
+            getWindow().setExitTransition(slideExit);
+        }
+    }
+
 }

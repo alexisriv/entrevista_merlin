@@ -1,19 +1,22 @@
 package com.sixelasavir.prueba.entrevista;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.sixelasavir.prueba.entrevista.retrofit.interfaces.ICategory;
-import com.sixelasavir.prueba.entrevista.retrofit.model.category.Children;
 import com.sixelasavir.prueba.entrevista.retrofit.model.category.Response;
 import com.sixelasavir.prueba.entrevista.retrofit.util.BaseService;
 
@@ -39,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 try {
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         /*for(Children ctg: response.body().getDataListing().getChildren()) {
                             ctg.getDataChildren().setBannerBitmap(new ImageTask(ctg.getDataChildren().getBannerImg()).execute().get());
                             ctg.getDataChildren().setIconBitmap(new ImageTask(ctg.getDataChildren().getIconImg()).execute().get());
@@ -68,35 +71,44 @@ public class SplashActivity extends AppCompatActivity {
                 nextCategoryActivity();
             }
         });
+
     }
 
-    private void nextCategoryActivity(){
+    private void nextCategoryActivity() {
         this.nextCategoryActivity(null);
     }
 
-    private void nextCategoryActivity(final String jsonString){
+    private void nextCategoryActivity(final String jsonString) {
 
-        new Thread() {
-            @Override
-            public void run() {
-                Intent intent = intent = new Intent(SplashActivity.this,CategoryActivity.class);
+        ActivityOptions options = null;
 
-                try{
-                    if(jsonString!=null && !jsonString.isEmpty())
-                        intent.putExtra(BundleString.JSON_CATEGORY_STRING, jsonString);
-                        // Todo: Toca buscar en cache si esta el json
-                    else
-                        Log.d(TAG, NOTIFICATION_SERVICE);
-                    sleep(2000);
-                }catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
-                } finally {
-                    startActivity(intent);
-                    finish();
-                }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            options = ActivityOptions.makeSceneTransitionAnimation(SplashActivity.this);
+        }
+        Intent intent = new Intent(SplashActivity.this, CategoryActivity.class);
+
+        try {
+            if (jsonString != null && !jsonString.isEmpty())
+                intent.putExtra(BundleString.JSON_CATEGORY_STRING, jsonString);
+                // Todo: Toca buscar en cache si esta el json
+            else
+                Log.d(TAG, NOTIFICATION_SERVICE);
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        } finally {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(intent, options.toBundle());
+            } else {
+                startActivity(intent);
             }
-        }.start();
+            finish();
+
+
+        }
     }
+
 
     public class ImageTask extends AsyncTask<Void, Void, Bitmap> {
 
@@ -124,4 +136,5 @@ public class SplashActivity extends AppCompatActivity {
             return null;
         }
     }
+
 }
