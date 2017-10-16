@@ -2,6 +2,7 @@ package com.sixelasavir.prueba.entrevista;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -51,6 +52,9 @@ public class SplashActivity extends AppCompatActivity {
                         }*/
                         String bodyString = new Gson().toJson(response.body());
 
+                        SharedPreferences.Editor editor = ((ApplicationApp) getApplicationContext()).getSharedPreferences().edit();
+                        editor.putString(BundleString.SP_JSON_CATEGORY_STRING, bodyString);
+                        editor.commit();
                         nextCategoryActivity(bodyString);
 
                         Log.d("response", bodyString);
@@ -68,7 +72,12 @@ public class SplashActivity extends AppCompatActivity {
             public void onFailure(Call<Response> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), R.string.msg_warning_off_line, Toast.LENGTH_LONG).show();
                 Log.e(TAG, t.getMessage());
-                nextCategoryActivity();
+                String bodyString = ((ApplicationApp) getApplicationContext()).getSharedPreferences().getString(BundleString.SP_JSON_CATEGORY_STRING,"");
+
+                if(bodyString.isEmpty())
+                    nextCategoryActivity();
+                else
+                    nextCategoryActivity(bodyString);
             }
         });
 
@@ -86,7 +95,7 @@ public class SplashActivity extends AppCompatActivity {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             options = ActivityOptions.makeSceneTransitionAnimation(SplashActivity.this);
         }
-        Intent intent = new Intent(SplashActivity.this, CategoryActivity.class);
+        final Intent intent = new Intent(SplashActivity.this, CategoryActivity.class);
 
         try {
             if (jsonString != null && !jsonString.isEmpty())
@@ -98,12 +107,23 @@ public class SplashActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         } finally {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                startActivity(intent, options.toBundle());
-            } else {
-                startActivity(intent);
-            }
-            finish();
+            final ActivityOptions finalOptions = options;
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        startActivity(intent, finalOptions.toBundle());
+                    } else {
+                        startActivity(intent);
+                    }
+                    finish();
+
+                }}.start();
 
 
         }

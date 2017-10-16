@@ -128,12 +128,12 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Slide slideEnter = new Slide();
             slideEnter.setSlideEdge(Gravity.RIGHT);
-            slideEnter.setDuration(700);
+            slideEnter.setDuration(1000);
             getWindow().setEnterTransition(slideEnter);
 
             Slide slideExit = new Slide();
             slideExit.setSlideEdge(Gravity.LEFT);
-            slideExit.setDuration(700);
+            slideExit.setDuration(1000);
             getWindow().setExitTransition(slideExit);
         }
     }

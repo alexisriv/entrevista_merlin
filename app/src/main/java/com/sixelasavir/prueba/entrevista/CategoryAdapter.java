@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,11 @@ import android.widget.Toast;
 
 import com.sixelasavir.prueba.entrevista.retrofit.model.category.Children;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -48,13 +52,23 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Children category = this.categories.get(position);
 
+        Bitmap bitmapBanner = getFile(categories.get(position).getDataChildren().getId().concat("_").concat(TYPE_BANNER));
+        Bitmap bitmapIcon = getFile(categories.get(position).getDataChildren().getId().concat("_").concat(TYPE_ICON));
+
+
         if (category.getDataChildren().getBannerBitmap() == null)
-            new ImageTask(category.getDataChildren().getBannerImg(), holder.getBannerImageView(), position, TYPE_BANNER).execute();
+            if (bitmapBanner == null)
+                new ImageTask(category.getDataChildren().getBannerImg(), holder.getBannerImageView(), position, TYPE_BANNER).execute();
+            else
+                holder.getBannerImageView().setImageBitmap(bitmapBanner);
         else
             holder.getBannerImageView().setImageBitmap(category.getDataChildren().getBannerBitmap());
 
         if (category.getDataChildren().getIconBitmap() == null)
-            new ImageTask(category.getDataChildren().getIconImg(), holder.getIconImageView(), position, TYPE_ICON).execute();
+            if (bitmapIcon == null)
+                new ImageTask(category.getDataChildren().getIconImg(), holder.getIconImageView(), position, TYPE_ICON).execute();
+            else
+                holder.getIconImageView().setImageBitmap(bitmapIcon);
         else
             holder.getIconImageView().setImageBitmap(category.getDataChildren().getIconBitmap());
 
@@ -170,9 +184,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 switch (type) {
                     case TYPE_BANNER:
                         categories.get(position).getDataChildren().setBannerBitmap(bitmap);
+                        saveFile(categories.get(position).getDataChildren().getId().concat("_").concat(TYPE_BANNER), bitmap);
                         break;
                     case TYPE_ICON:
                         categories.get(position).getDataChildren().setIconBitmap(bitmap);
+                        saveFile(categories.get(position).getDataChildren().getId().concat("_").concat(TYPE_ICON), bitmap);
                         break;
                 }
 
@@ -184,5 +200,45 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     public interface GoListener {
         void executeListener(String path);
+    }
+
+
+    private void saveFile(String dir, Bitmap bitmap) {
+        File cacheDir = context.getCacheDir();
+        File file = null;
+        file = new File(cacheDir, dir.concat(".jpg"));
+
+
+        try {
+            cacheDir.mkdirs();
+            FileOutputStream stream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            stream.flush();
+            stream.close();
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private Bitmap getFile(String dir) {
+        File cacheDir = context.getCacheDir();
+        File file = new File(cacheDir, dir.concat(".jpg"));
+        FileInputStream fileInputStream = null;
+
+        try {
+            fileInputStream = new FileInputStream(file);
+            return BitmapFactory.decodeStream(fileInputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 }

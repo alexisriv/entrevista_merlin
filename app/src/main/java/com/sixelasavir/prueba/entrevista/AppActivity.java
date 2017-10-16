@@ -88,11 +88,11 @@ public class AppActivity extends AppCompatActivity implements AppAdapter.DetailL
     private void setupTransition() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Fade fadeEnter = new Fade();
-            fadeEnter.setDuration(700);
+            fadeEnter.setDuration(1000);
             getWindow().setEnterTransition(fadeEnter);
 
             Explode explodeExit = new Explode();
-            explodeExit.setDuration(700);
+            explodeExit.setDuration(1000);
             getWindow().setExitTransition(explodeExit);
         }
     }

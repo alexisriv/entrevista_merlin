@@ -10,6 +10,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class DataChildren {
 
+    private String id;
+
     @SerializedName("banner_img")
     private String bannerImg;
 
@@ -51,7 +53,8 @@ public class DataChildren {
     public DataChildren() {
     }
 
-    public DataChildren(String bannerImg, String displayNamePrefixed, String displayName, String headerImg, String title, String audienceTarget, String iconImg, String headerTitle, String url, String advertiserCategory, String publicDescription) {
+    public DataChildren(String id, String bannerImg, String displayNamePrefixed, String displayName, String headerImg, String title, String audienceTarget, String iconImg, String headerTitle, String url, String advertiserCategory, String publicDescription) {
+        this.id = id;
         this.bannerImg = bannerImg;
         this.displayNamePrefixed = displayNamePrefixed;
         this.displayName = displayName;
@@ -175,5 +178,13 @@ public class DataChildren {
 
     public void setIconBitmap(Bitmap iconBitmap) {
         this.iconBitmap = iconBitmap;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
